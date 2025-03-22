@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     header: {
-        height: 100,
+        height: 50,
         backgroundColor: '#000000',
     },
     body: {
@@ -36,16 +36,16 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     foot: {
-        height: 50,
+        height: 30,
         backgroundColor: '#000000',
     },
     text: {
         fontFamily: 'Monserrat',
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         marginBottom:5,
         color:'#ffffff',
-        marginTop:6,
+        marginTop:9,
     },
     TouchableOpacity:{
         alignItems:'center',

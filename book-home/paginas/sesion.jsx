@@ -8,8 +8,11 @@ export default function Index({ navigation }) {
             <ScrollView contentContainerStyle={styles.body}>
                 <Text style={styles.text}>Iniciar Sesión</Text>
                 
-                <TouchableOpacity onPress={()=>navigation.navigate('index')}>
-                    
+                <TouchableOpacity onPress={()=>navigation.navigate('registro')}>
+                    <Text style={styles.text}>Registro</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('principal')}>
+                    <Text style={styles.text}>principal</Text>
                 </TouchableOpacity>
             </ScrollView>
             <View style={styles.foot}></View>
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     header: {
-        height: 100,
+        height: 50,
         backgroundColor: '#000000',
     },
     body: {
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     foot: {
-        height: 50,
+        height: 30,
         backgroundColor: '#000000',
     },
     text: {
