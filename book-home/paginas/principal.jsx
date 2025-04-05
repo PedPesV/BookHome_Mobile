@@ -1,84 +1,114 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Index({ navigation }) {
+    const properties = [
+        {
+            id: 1,
+            title: "Casa en la playa",
+            description: "Hermosa casa frente al mar con 3 habitaciones, piscina privada y vista al océano.",
+            location: "Playa del Carmen, MX",
+            price: "$250/noche",
+            image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750"
+        },
+        {
+            id: 2,
+            title: "Apartamento en el centro",
+            description: "Moderno apartamento en el corazón de la ciudad, cerca de restaurantes y atracciones.",
+            location: "Ciudad de México, MX",
+            price: "$180/noche",
+            image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb"
+        },
+        {
+            id: 3,
+            title: "Casa de campo",
+            description: "Acogedora casa rodeada de naturaleza, ideal para desconectar y relajarse.",
+            location: "Valle de Bravo, MX",
+            price: "$200/noche",
+            image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf"
+        },
+        {
+            id: 4,
+            title: "Departamento moderno",
+            description: "Elegante departamento con acabados de lujo y vista panorámica a la ciudad.",
+            location: "Monterrey, MX",
+            price: "$220/noche",
+            image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
+        }
+    ];
+
     return (
         <View style={styles.container}>
-            <View style={styles.header}></View>
+            <View style={styles.header}>
+
+            </View>
+            
             <ScrollView contentContainerStyle={styles.body}>
-                <Text style={styles.textTitle}>¡Buenos días Maria!</Text>
-                <Text style={styles.text}>Podría interesarte:</Text>
+            <Text style={styles.titleText}>¡Buenos días María!</Text>
+                <Text style={styles.sectionTitle}>Recomendaciones para ti</Text>
                 
-                <View style={styles.propertyContainer}>
-                    <View style={styles.propertyCard}>
-                        <Text style={styles.propertyTitle}>Casa en la playa</Text>
-                        <Text style={styles.propertyDescription}>
-                            Una hermosa casa frente al mar, ideal para vacaciones.
-                        </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('detalles')}>
-                            <Text style={styles.detailsButtonText}>Ver detalles</Text>
+                <View style={styles.propertiesContainer}>
+                    {properties.map((property) => (
+                        <TouchableOpacity 
+                            key={property.id}
+                            style={styles.propertyCard}
+                            onPress={() => navigation.navigate('detalles', { property })}
+                        >
+                            <Image 
+                                source={{ uri: property.image }} 
+                                style={styles.propertyImage}
+                            />
+                            <View style={styles.propertyContent}>
+                                <Text style={styles.propertyTitle}>{property.title}</Text>
+                                <Text style={styles.propertyLocation}>
+                                    <Ionicons name="location" size={14} color="#6C757D" /> {property.location}
+                                </Text>
+                                <Text style={styles.propertyDescription}>{property.description}</Text>
+                                <View style={styles.propertyFooter}>
+                                    <Text style={styles.propertyPrice}>{property.price}</Text>
+                                    <TouchableOpacity 
+                                        style={styles.favoriteButton}
+                                        onPress={(e) => {
+                                            e.stopPropagation();
+                                            // Lógica para agregar a favoritos
+                                        }}
+                                    >
+                                        <Ionicons name="heart-outline" size={20} color="#343A40" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </TouchableOpacity>
-                        <View style={styles.iconWrapper}>
-                            <TouchableOpacity style={styles.iconFav}>
-                                <Ionicons name="heart-outline" size={20} color="#000" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.propertyCard}>
-                        <Text style={styles.propertyTitle}>Apartamento en el centro</Text>
-                        <Text style={styles.propertyDescription}>
-                            Moderno apartamento en el centro de la ciudad, cerca de todo.
-                        </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('detalles')}>
-                            <Text style={styles.detailsButtonText}>Ver detalles</Text>
-                        </TouchableOpacity>
-                        <View style={styles.iconWrapper}>
-                            <TouchableOpacity style={styles.iconFav}>
-                                <Ionicons name="heart-outline" size={20} color="#000" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.propertyCard}>
-                        <Text style={styles.propertyTitle}>Casa de campo</Text>
-                        <Text style={styles.propertyDescription}>
-                            Casa acogedora en el campo, rodeada de naturaleza.
-                        </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('detalles')}>
-                            <Text style={styles.detailsButtonText}>Ver detalles</Text>
-                        </TouchableOpacity>
-                        <View style={styles.iconWrapper}>
-                            <TouchableOpacity style={styles.iconFav}>
-                                <Ionicons name="heart-outline" size={20} color="#000" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    ))}
                 </View>
             </ScrollView>
-            <View style={styles.foot}>
-                <View style={styles.iconContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate('principal')}>
-                        <View style={styles.iconItem}>
-                            <Ionicons name="home-outline" size={40} color="#fff" />
-                            <Text style={styles.iconLabel}>Principal</Text>
-                        </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.navigate('buscar')}>
-                        <View style={styles.iconItem}>
-                            <Ionicons name="search-outline" size={40} color="#fff" />
-                            <Text style={styles.iconLabel}>Buscar</Text>
-                        </View>
+            {/* Menú de navegación */}
+            <View style={styles.navBar}>
+                    <TouchableOpacity 
+                      style={[styles.navButton, styles.activeNavButton]}
+                      onPress={() => navigation.navigate('principal')}
+                    >
+                      <Ionicons name="home" size={24} color="#fff" />
+                      <Text style={styles.navButtonText}>Inicio</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.navigate('perfil')}>
-                        <View style={styles.iconItem}>
-                            <Ionicons name="person-outline" size={40} color="#fff" />
-                            <Text style={styles.iconLabel}>Perfil</Text>
-                        </View>
+                    
+                    <TouchableOpacity 
+                      style={styles.navButton}
+                      onPress={() => navigation.navigate('buscar')}
+                    >
+                      <Ionicons name="search" size={24} color="#fff" />
+                      <Text style={styles.navButtonText}>Buscar</Text>
                     </TouchableOpacity>
-                </View>
-            </View>
+                    
+                    <TouchableOpacity 
+                      style={styles.navButton}
+                      onPress={() => navigation.navigate('perfil')}
+                    >
+                      <Ionicons name="person" size={24} color="#fff" />
+                      <Text style={styles.navButtonText}>Perfil</Text>
+                    </TouchableOpacity>
+                  </View>
         </View>
     );
 }
@@ -86,107 +116,103 @@ export default function Index({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#F8F9FA',
     },
     header: {
-        height: 70,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: 20,
+        height: 65,
+        backgroundColor: '#151719',
+        justifyContent: 'flex-end',
+        paddingBottom: 20,
+        paddingHorizontal: 20,
+        marginBottom: 35,
+    },
+    titleText: {
+        fontSize: 28,
+        fontWeight: '600',
+        color: '#343A40',
     },
     body: {
-        alignItems: 'left',
-        justifyContent: 'center',
-        flexGrow: 1,
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingBottom: 80,
     },
-    text: {
-        fontFamily: 'Montserrat',
-        fontSize: 18,
-        color: '#000',
-        textAlign: 'left',
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#343A40',
+        marginVertical: 20,
+    },
+    propertiesContainer: {
         marginBottom: 20,
-        marginTop: 10,
-        fontWeight: 'bold',
-    },
-    textTitle: {
-        fontFamily: 'Montserrat',
-        fontSize: 40,
-        color: '#000',
-        textAlign: 'center',
-        marginBottom: 20,
-        fontWeight: 'bold',
-    },
-    propertyContainer: {
-        width: '100%',
-        paddingBottom: 20,
     },
     propertyCard: {
-        backgroundColor: '#fff',
-        padding: 15,
-        marginBottom: 15,
-        borderRadius: 10,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        overflow: 'hidden',
+        marginBottom: 20,
+        elevation: 3,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        flexDirection: 'column',
-        justifyContent: 'space-between', // Make sure content is distributed evenly
+        shadowRadius: 4,
+    },
+    propertyImage: {
+        width: '100%',
+        height: 180,
+    },
+    propertyContent: {
+        padding: 15,
     },
     propertyTitle: {
-        fontFamily: 'Montserrat',
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#343A40',
+        marginBottom: 5,
+    },
+    propertyLocation: {
+        fontSize: 14,
+        color: '#6C757D',
+        marginBottom: 10,
     },
     propertyDescription: {
-        fontFamily: 'Montserrat',
         fontSize: 14,
-        color: '#555',
-        marginTop: 10,
+        color: '#495057',
         marginBottom: 15,
+        lineHeight: 20,
     },
-    detailsButtonText: {
-        color: '#000',
-        fontFamily: 'Montserrat',
-        fontWeight: 'bold',
-    },
-    iconWrapper: {
+    propertyFooter: {
         flexDirection: 'row',
-        justifyContent: 'flex-end', // Align items to the right side
-        marginTop: 'auto', // Pushes it to the bottom of the card
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    iconFav: {
+    propertyPrice: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#28A745',
+    },
+    favoriteButton: {
         padding: 5,
     },
-    foot: {
-        height: 90,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-    },
-    iconContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '100%',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-    },
-    iconItem: {
-        alignItems: 'center',
-        margin: 10,
-    },
-    iconLabel: {
-        fontFamily: 'Montserrat',
-        fontWeight: 'bold',
-        fontSize: 12,
-        color: '#fff',
-        marginTop: 5,
-    },
+    navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#151719',
+    paddingVertical: 12,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  navButton: {
+    alignItems: 'center',
+  },
+  navButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  activeNavButton: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#fff',
+  },
 });
