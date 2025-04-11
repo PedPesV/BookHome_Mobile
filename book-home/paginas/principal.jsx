@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -38,14 +38,22 @@ export default function Index({ navigation }) {
         }
     ];
 
+    // Estado para rastrear propiedades favoritas por su ID
+    const [favorites, setFavorites] = useState({});
+    
+    const toggleFavorite = (propertyId) => {
+        setFavorites(prev => ({
+            ...prev,
+            [propertyId]: !prev[propertyId]
+        }));
+    };
+
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-
-            </View>
+            <View style={styles.header}></View>
             
             <ScrollView contentContainerStyle={styles.body}>
-            <Text style={styles.titleText}>¡Buenos días María!</Text>
+                <Text style={styles.titleText}>¡Buenos días María!</Text>
                 <Text style={styles.sectionTitle}>Recomendaciones para ti</Text>
                 
                 <View style={styles.propertiesContainer}>
@@ -67,14 +75,18 @@ export default function Index({ navigation }) {
                                 <Text style={styles.propertyDescription}>{property.description}</Text>
                                 <View style={styles.propertyFooter}>
                                     <Text style={styles.propertyPrice}>{property.price}</Text>
-                                    <TouchableOpacity 
+                                    <TouchableOpacity  
                                         style={styles.favoriteButton}
                                         onPress={(e) => {
                                             e.stopPropagation();
-                                            // Lógica para agregar a favoritos
+                                            toggleFavorite(property.id);
                                         }}
                                     >
-                                        <Ionicons name="heart-outline" size={20} color="#343A40" />
+                                        <Ionicons 
+                                            name={favorites[property.id] ? "heart" : "heart-outline"} 
+                                            size={24} 
+                                            color={favorites[property.id] ? "#DC3545" : "#6C757D"} 
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -85,34 +97,35 @@ export default function Index({ navigation }) {
 
             {/* Menú de navegación */}
             <View style={styles.navBar}>
-                    <TouchableOpacity 
-                      style={[styles.navButton, styles.activeNavButton]}
-                      onPress={() => navigation.navigate('principal')}
-                    >
-                      <Ionicons name="home" size={24} color="#fff" />
-                      <Text style={styles.navButtonText}>Inicio</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity 
-                      style={styles.navButton}
-                      onPress={() => navigation.navigate('buscar')}
-                    >
-                      <Ionicons name="search" size={24} color="#fff" />
-                      <Text style={styles.navButtonText}>Buscar</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity 
-                      style={styles.navButton}
-                      onPress={() => navigation.navigate('perfil')}
-                    >
-                      <Ionicons name="person" size={24} color="#fff" />
-                      <Text style={styles.navButtonText}>Perfil</Text>
-                    </TouchableOpacity>
-                  </View>
+                <TouchableOpacity 
+                    style={[styles.navButton, styles.activeNavButton]}
+                    onPress={() => navigation.navigate('principal')}
+                >
+                    <Ionicons name="home" size={24} color="#fff" />
+                    <Text style={styles.navButtonText}>Inicio</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                    style={styles.navButton}
+                    onPress={() => navigation.navigate('buscar')}
+                >
+                    <Ionicons name="search" size={24} color="#fff" />
+                    <Text style={styles.navButtonText}>Buscar</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                    style={styles.navButton}
+                    onPress={() => navigation.navigate('perfil')}
+                >
+                    <Ionicons name="person" size={24} color="#fff" />
+                    <Text style={styles.navButtonText}>Perfil</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
 
+// Los estilos se mantienen igual que en tu código original
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -193,26 +206,26 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#151719',
-    paddingVertical: 12,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  navButton: {
-    alignItems: 'center',
-  },
-  navButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  activeNavButton: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#fff',
-  },
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#151719',
+        paddingVertical: 12,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+    },
+    navButton: {
+        alignItems: 'center',
+    },
+    navButtonText: {
+        color: '#fff',
+        fontSize: 12,
+        marginTop: 2,
+    },
+    activeNavButton: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#fff',
+    },
 });

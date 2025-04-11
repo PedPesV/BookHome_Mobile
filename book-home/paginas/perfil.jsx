@@ -63,13 +63,14 @@ export default function Index({ navigation }) {
                 </Text>
                 <View style={styles.propertyFooter}>
                   <Text style={styles.propertyPrice}>$250/noche</Text>
-                  <TouchableOpacity 
+                  
+                </View>
+                <TouchableOpacity 
                     style={styles.detailsButton}
                     onPress={() => navigation.navigate('detalles')}
                   >
                     <Text style={styles.detailsButtonText}>Ver detalles</Text>
                   </TouchableOpacity>
-                </View>
               </View>
             </View>
 
@@ -78,7 +79,7 @@ export default function Index({ navigation }) {
             </TouchableOpacity>
           </View>
           
-          <TouchableOpacity style={styles.viewAllButton}>
+          <TouchableOpacity style={styles.viewAllButton} onPress={()=>navigation.navigate('favoritos')}>
             <Text style={styles.viewAllText}>Ver todos mis favoritos</Text>
           </TouchableOpacity>
         </View>
@@ -287,9 +288,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   propertyFooter: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    
   },
   propertyPrice: {
     fontSize: 16,
@@ -297,12 +299,15 @@ const styles = StyleSheet.create({
     color: '#10B981',
   },
   detailsButton: {
+    marginTop:'10',
+    alignItems:'center',
     backgroundColor: '#343A40',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
   },
   detailsButtonText: {
+    
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
