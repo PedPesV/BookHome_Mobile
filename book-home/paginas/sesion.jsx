@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Index({ navigation }) {
@@ -8,9 +8,18 @@ export default function Index({ navigation }) {
         password: ''
     });
 
+    const {username, password} = credentials
+    const notallowed = /[<>{}$#!%=~]/;
+
     const handleLogin = () => {
-        // Lógica de inicio de sesión
-        navigation.navigate('principal');
+        if(!username || !password){
+            Alert.alert("Alerta", "Favor de llenar todos los campos")
+            return
+        }
+        if(notallowed.test(username) || notallowed.test(password)){
+            Alert.alert("Alerta", "Carácteres no permitidos")
+            return
+        }
     };
 
     return (

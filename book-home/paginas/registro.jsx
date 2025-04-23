@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// ...importaciones (sin cambios)
 export default function Registro({ navigation }) {
     const [isSelected, setSelection] = useState(false);
     const [formData, setFormData] = useState({
@@ -16,6 +15,43 @@ export default function Registro({ navigation }) {
 
     const handleInputChange = (name, value) => {
         setFormData({ ...formData, [name]: value });
+    };
+
+    const { username, phone, email, password, confirmPassword } = formData;
+
+    const allowedEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const allowedPhone = /^\d{10}$/;
+
+    const handleRegister = () => {
+        // Validaciones
+        if (!username || !phone || !email || !password || !confirmPassword) {
+            Alert.alert("Alerta", "Favor de llenar todos los campos");
+            return;
+        }
+        if (!allowedEmail.test(email)) {
+            Alert.alert("Alerta", "Favor de agregar un email válido");
+            return;
+        }
+        if (!allowedPhone.test(phone)) {
+            Alert.alert("Alerta", "Favor de ingresar un número válido (10 dígitos)");
+            return;
+        }
+        if (password.length < 6) {
+            Alert.alert("Alerta", "La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
+        if (password !== confirmPassword) {
+            Alert.alert('Error', 'Las contraseñas no coinciden');
+            return;
+        }
+        if (!isSelected) {
+            Alert.alert("Alerta", "Debes aceptar los términos y condiciones");
+            return;
+        }
+
+        // Si todo está bien
+        Alert.alert("Registro completado", "¡Bienvenido!");
+        // Aquí podrías redirigir o guardar los datos
     };
 
     return (
@@ -65,7 +101,7 @@ export default function Registro({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.registerButton}
-                        onPress={() => alert('Registro completado')}
+                        onPress={handleRegister}
                     >
                         <Text style={styles.registerButtonText}>Registrarse</Text>
                         <Ionicons name="arrow-forward" size={20} color="#fff" />
@@ -86,6 +122,7 @@ export default function Registro({ navigation }) {
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
