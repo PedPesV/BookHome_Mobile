@@ -22,7 +22,7 @@ export default function Buscar({ navigation }) {
     const sampleProperties = [
         {
             id: 1,
-            title: "CDTnX, Azcapotzalco",
+            title: "CDMX, Azcapotzalco",
             address: "Av. 22 de Febrero",
             price: "$5,000 mxn/mes"
         },

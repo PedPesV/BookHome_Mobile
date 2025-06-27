@@ -67,7 +67,7 @@ export default function Index({ navigation }) {
                     {/* Botón de inicio de sesión */}
                     <TouchableOpacity 
                         style={styles.loginButton}
-                        onPress={handleLogin}
+                        onPress={(handleLogin)}
                     >
                         <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
                         <Ionicons name="arrow-forward" size={20} color="#fff" />

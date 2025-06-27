@@ -84,35 +84,6 @@ export default function Index({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Opciones de cuenta */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Configuración</Text>
-          
-          <TouchableOpacity style={styles.optionButton}>
-            <View style={styles.optionContent}>
-              <Ionicons name="notifications" size={24} color="#6C757D" />
-              <Text style={styles.optionText}>Notificaciones</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#6C757D" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.optionButton}>
-            <View style={styles.optionContent}>
-              <Ionicons name="lock-closed" size={24} color="#6C757D" />
-              <Text style={styles.optionText}>Seguridad</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#6C757D" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.optionButton}>
-            <View style={styles.optionContent}>
-              <Ionicons name="help-circle" size={24} color="#6C757D" />
-              <Text style={styles.optionText}>Ayuda</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#6C757D" />
-          </TouchableOpacity>
-        </View>
-
         {/* Acciones de cuenta */}
         <View style={styles.sectionContainer}>
           <TouchableOpacity 

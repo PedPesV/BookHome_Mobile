@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Modal } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -12,6 +12,9 @@ export default function Registro({ navigation }) {
         password: '',
         confirmPassword: ''
     });
+
+    const[modalVisible, setModalVisible] = useState(false);
+    const [inputText, setInputText] = useState('');
 
     const handleInputChange = (name, value) => {
         setFormData({ ...formData, [name]: value });
@@ -28,12 +31,12 @@ export default function Registro({ navigation }) {
             Alert.alert("Alerta", "Favor de llenar todos los campos");
             return;
         }
-        if (!allowedEmail.test(email)) {
-            Alert.alert("Alerta", "Favor de agregar un email válido");
-            return;
-        }
         if (!allowedPhone.test(phone)) {
             Alert.alert("Alerta", "Favor de ingresar un número válido (10 dígitos)");
+            return;
+        }
+        if (!allowedEmail.test(email)) {
+            Alert.alert("Alerta", "Favor de agregar un email válido");
             return;
         }
         if (password.length < 6) {
@@ -48,11 +51,15 @@ export default function Registro({ navigation }) {
             Alert.alert("Alerta", "Debes aceptar los términos y condiciones");
             return;
         }
-
-        // Si todo está bien
-        Alert.alert("Registro completado", "¡Bienvenido!");
-        // Aquí podrías redirigir o guardar los datos
+        setModalVisible(true);
     };
+
+    //Funcion para validar código enviado a email
+    const validateCode = () =>{
+        // Si todo está bien
+        setModalVisible(false);
+        Alert.alert("Registro completado", "¡Bienvenido!");
+    }
 
     return (
         <View style={styles.container}>
@@ -106,6 +113,39 @@ export default function Registro({ navigation }) {
                         <Text style={styles.registerButtonText}>Registrarse</Text>
                         <Ionicons name="arrow-forward" size={20} color="#fff" />
                     </TouchableOpacity>
+
+                    <Modal
+                        transparent={true}
+                        animationType="fade"
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(false)}
+                    >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>Verifica tu correo</Text>
+                        <Text style={styles.modalMessage}>
+                            Ingresa el código enviado a tu correo electrónico para continuar con el registro.
+                        </Text>
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Código de verificación"
+                            placeholderTextColor="#ADB5BD"
+                            value={inputText}
+                            onChangeText={setInputText}
+                            keyboardType="numeric"
+                        />
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity style={styles.modalButtonCancel} onPress={() => setModalVisible(false)}>
+                            <Text style={styles.modalButtonText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalButtonConfirm} onPress={validateCode}>
+                            <Text style={styles.modalButtonText}>Confirmar</Text>
+                            </TouchableOpacity>
+                        </View>
+                        </View>
+                    </View>
+                    </Modal>
+
 
                     <View style={styles.loginOption}>
                         <Text style={styles.loginText}>¿Ya tienes una cuenta? </Text>
@@ -238,4 +278,68 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#ADB5BD',
     },
+    modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    width: '85%',
+    alignItems: 'center',
+    elevation: 5,
+    },
+    modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#343A40',
+    marginBottom: 10,
+    },
+    modalMessage: {
+    fontSize: 14,
+    color: '#6C757D',
+    textAlign: 'center',
+    marginBottom: 20,
+    },
+    modalInput: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#E9ECEF',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: '#343A40',
+    marginBottom: 20,
+    },
+    modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    },
+    modalButtonCancel: {
+    flex: 1,
+    marginRight: 10,
+    backgroundColor: '#ADB5BD',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    },
+    modalButtonConfirm: {
+    flex: 1,
+    marginLeft: 10,
+    backgroundColor: '#343A40',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    },
+    modalButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+    },
+
 });
