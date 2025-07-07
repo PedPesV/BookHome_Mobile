@@ -20,6 +20,7 @@ export default function Index({ navigation }) {
             Alert.alert("Alerta", "Carácteres no permitidos")
             return
         }
+        navigation.navigate("principal")
     };
 
     return (

@@ -1,8 +1,22 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import React, {useState} from 'react';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Text, Image, Modal, TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Index({ navigation }) {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+
+
+  const pressPerfil = () =>{
+    //Aqui va el codigo para actualizar el perfil
+    setModalVisible(false);
+    alert("Hola mundo");
+
+  }
+  
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.body}>
@@ -32,10 +46,52 @@ export default function Index({ navigation }) {
               <Text style={styles.infoText}>+1 234 567 890</Text>
             </View>
             
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity style={styles.editButton} onPress={() => setModalVisible(true)}>
               <Text style={styles.editButtonText}>Editar Perfil</Text>
               <Ionicons name="pencil" size={16} color="#fff" />
             </TouchableOpacity>
+
+            <Modal
+              transparent={true}
+              animationType="fade"
+              visible={modalVisible}
+              onRequestClose={() => setModalVisible(false)}
+            >
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalContainer}>
+                  <Text style={styles.modalTitle}>Editar Perfil</Text>
+                  <Text style={styles.fieldName}>Nuevo Nombre:</Text>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Ingresa tu nuevo nombre"
+                    value={editName}
+                    onChangeText={setEditName}
+                    placeholderTextColor="#ADB5BD"
+                  />
+                  <Text style={styles.fieldName}>Nuevo Email:</Text>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Ingresa tu nuevo email" //Preguntar si el Email se puede modificar
+                    value={editEmail}
+                    onChangeText={setEditEmail}
+                    placeholderTextColor="#ADB5BD"
+                    keyboardType="email-address"
+                  />
+
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity style={styles.modalButtonCancel} onPress={() => setModalVisible(false)}>
+                      <Text style={styles.modalButtonText}>Cancelar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.modalButtonConfirm} onPress={pressPerfil}>
+                      <Text style={styles.modalButtonText}>Actualizar</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+
+
           </View>
         </View>
 
@@ -354,4 +410,67 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: '#fff',
   },
+  modalOverlay: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0,0,0,0.5)',
+},
+modalContainer: {
+  backgroundColor: '#fff',
+  borderRadius: 20,
+  padding: 20,
+  width: '85%',
+  alignItems: 'center',
+  elevation: 5,
+},
+modalTitle: {
+  fontSize: 20,
+  fontWeight: 'bold',
+  color: '#343A40',
+  marginBottom: 15,
+},
+modalMessage: {
+    fontSize: 14,
+    color: '#6C757D',
+    marginBottom: 20,
+    },
+modalInput: {
+  width: '100%',
+  borderWidth: 1,
+  borderColor: '#E9ECEF',
+  borderRadius: 10,
+  paddingHorizontal: 15,
+  paddingVertical: 10,
+  fontSize: 16,
+  color: '#343A40',
+  marginBottom: 15,
+},
+modalButtons: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+},
+modalButtonCancel: {
+  flex: 1,
+  marginRight: 10,
+  backgroundColor: '#ADB5BD',
+  paddingVertical: 12,
+  borderRadius: 10,
+  alignItems: 'center',
+},
+modalButtonConfirm: {
+  flex: 1,
+  marginLeft: 10,
+  backgroundColor: '#343A40',
+  paddingVertical: 12,
+  borderRadius: 10,
+  alignItems: 'center',
+},
+modalButtonText: {
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: 16,
+},
+
 });
