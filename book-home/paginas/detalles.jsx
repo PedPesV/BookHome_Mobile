@@ -1,28 +1,98 @@
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, ScrollView, StyleSheet, Image, TouchableOpacity, Text, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function DetallesPropiedad({ navigation }) {
     const [isFavorite, setIsFavorite] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const scrollViewRef = useRef(null);
+
+    // Array de imágenes para el carrusel
+    const images = [
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    ];
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite);
     };
+
+    const handleScroll = (event) => {
+        const scrollPosition = event.nativeEvent.contentOffset.x;
+        const index = Math.round(scrollPosition / screenWidth);
+        setCurrentImageIndex(index);
+    };
+
+    const goToImage = (index) => {
+        setCurrentImageIndex(index);
+        scrollViewRef.current?.scrollTo({
+            x: index * screenWidth,
+            animated: true
+        });
+    };
+
+    const goToPrevious = () => {
+        const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+        goToImage(newIndex);
+    };
+
+    const goToNext = () => {
+        const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+        goToImage(newIndex);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                    </View>
+                <TouchableOpacity 
+                    style={styles.headerBackButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Ionicons name="arrow-back" size={24} color="#fff" />
+                </TouchableOpacity>
+            </View>
 
             <ScrollView contentContainerStyle={styles.body}>
-                {/* Carrusel de imágenes */}
-                <View style={styles.carousel}>
-                    <Image 
-                        style={styles.mainImage} 
-                        source={{ uri: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750' }} 
-                    />
-                    <View style={styles.imageCounter}>
-                        <Text style={styles.imageCounterText}>1/5</Text>
+                {/* Carrusel de imágenes mejorado */}
+                <View style={styles.carouselContainer}>
+                    <ScrollView
+                        ref={scrollViewRef}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
+                        style={styles.carousel}
+                    >
+                        {images.map((image, index) => (
+                            <Image 
+                                key={index}
+                                style={styles.carouselImage} 
+                                source={{ uri: image }}
+                                resizeMode="cover"
+                            />
+                        ))}
+                    </ScrollView>
+                    
+
+                    
+                    {/* Indicadores de puntos */}
+                    <View style={styles.dotsContainer}>
+                        {images.map((_, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    styles.dot,
+                                    currentImageIndex === index ? styles.activeDot : styles.inactiveDot
+                                ]}
+                                onPress={() => goToImage(index)}
+                            />
+                        ))}
                     </View>
                 </View>
                 
@@ -35,9 +105,9 @@ export default function DetallesPropiedad({ navigation }) {
                             onPress={toggleFavorite}
                         >
                             <Ionicons 
-                                name={isFavorite ? "heart-outline" : "heart"} 
+                                name={isFavorite ? "heart" : "heart-outline"} 
                                 size={24} 
-                                color={isFavorite ? "#6C757D" : "#DC3545"} 
+                                color={isFavorite ? "#DC3545" : "#6C757D"} 
                             />
                         </TouchableOpacity>
                     </View>
@@ -132,44 +202,90 @@ export default function DetallesPropiedad({ navigation }) {
                                 <Ionicons name="call" size={14} color="#6C757D" /> 998 123 4567
                             </Text>
                         </View>
-                        
                     </View>
                 </View>
             </ScrollView>
-
-
-
-            {/* Menú de navegación (igual al primer código) */}
-            <View style={styles.navBar}>
-                <TouchableOpacity 
-                    style={styles.navButton}
-                    onPress={() => navigation.navigate('principal')}
-                >
-                    <Ionicons name="home" size={24} color="#fff" />
-                    <Text style={styles.navButtonText}>Inicio</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                    style={styles.navButton}
-                    onPress={() => navigation.navigate('buscar')}
-                >
-                    <Ionicons name="search" size={24} color="#fff" />
-                    <Text style={styles.navButtonText}>Buscar</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                    style={[styles.navButton, styles.activeNavButton]}
-                    onPress={() => navigation.navigate('perfil')}
-                >
-                    <Ionicons name="person" size={24} color="#fff" />
-                    <Text style={styles.navButtonText}>Perfil</Text>
-                </TouchableOpacity>
+            
+            {/* Footer */}
+            <View style={styles.footer}>
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F8F9FA',
+    },
+    
+    // Footer
+    footer: {
+        height: 50,
+        backgroundColor: '#151719',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderTopColor: '#E5E7EB',
+        marginTop: 'auto',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    header: {
+        height: 60,
+        backgroundColor: '#151719',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+    },
+    headerBackButton: {
+        marginRight: 15,
+        padding: 5,
+    },
+    body: {
+        paddingBottom: 20,
+        flexGrow: 1,
+    },
+    
+    // Estilos del carrusel mejorado
+    carouselContainer: {
+        position: 'relative',
+        height: 250,
+    },
+    carousel: {
+        height: 250,
+    },
+    carouselImage: {
+        width: screenWidth,
+        height: 250,
+    },
+    dotsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
+    },
+    dot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginHorizontal: 4,
+    },
+    activeDot: {
+        backgroundColor: '#fff',
+        width: 20,
+    },
+    inactiveDot: {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    },
+    
+    // Estilos existentes
+    infoSection: {
+        padding: 20,
+    },
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -180,7 +296,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '700',
         color: '#1F2937',
-        flex: 1, // Permite que el título ocupe el espacio disponible
+        flex: 1,
     },
     favoriteButton: {
         width: 40,
@@ -191,55 +307,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
     },
-
-
-    container: {
-        flex: 1,
-        backgroundColor: '#F8F9FA',
-    },
-    header: {
-        height: 60,
-        backgroundColor: '#151719',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 15,
-    },
-    backButton: {
-        marginRight: 15,
-    },
-    headerTitle: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-    body: {
-        paddingBottom: 120,
-    },
-    carousel: {
-        position: 'relative',
-    },
-    mainImage: {
-        width: '100%',
-        height: 250,
-        resizeMode: 'cover',
-    },
-    imageCounter: {
-        position: 'absolute',
-        bottom: 15,
-        right: 15,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingHorizontal: 12,
-        paddingVertical: 5,
-        borderRadius: 15,
-    },
-    imageCounterText: {
-        color: '#fff',
-        fontSize: 14,
-    },
-    infoSection: {
-        padding: 20,
-    },
-
     locationContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -352,64 +419,5 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#6B7280',
         marginTop: 3,
-    },
-    contactButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#343A40',
-        paddingVertical: 8,
-        paddingHorizontal: 15,
-        borderRadius: 20,
-    },
-    contactButtonText: {
-        color: '#fff',
-        marginLeft: 5,
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 70,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        backgroundColor: '#fff',
-        borderTopWidth: 1,
-        borderTopColor: '#E5E7EB',
-    },
-
-    contactButtonLarge: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#343A40',
-        borderRadius: 25,
-        paddingVertical: 12,
-    },
-    navBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#151719',
-        paddingVertical: 12,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-    },
-    navButton: {
-        alignItems: 'center',
-    },
-    navButtonText: {
-        color: '#fff',
-        fontSize: 12,
-        marginTop: 2,
-    },
-    activeNavButton: {
-        borderBottomWidth: 2,
-        borderBottomColor: '#fff',
     },
 });
