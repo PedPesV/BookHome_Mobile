@@ -12,10 +12,13 @@ import Buscar from './paginas/buscar';
 import Detalles from './paginas/detalles';
 import Favoritos from './paginas/favoritos';
 
+import axios from 'axios';
+
 const Stack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [conexionExitosa, setConexionExitosa] = useState(null);
 
   const loadFonts = async () => {
     await Font.loadAsync({
@@ -24,12 +27,24 @@ export default function App() {
     setFontsLoaded(true);
   };
 
+  const probarConexion = async () => {
+    try {
+      const res = await axios.get('http://IP:3000/api/test'); //<--Colocar IP local
+      console.log('Conectado a la API:', res.data);
+      setConexionExitosa(true);
+    } catch (error) {
+      console.error('Error al conectar con la API:', error.message);
+      setConexionExitosa(false);
+    }
+  };
+
   useEffect(() => {
     loadFonts();
+    probarConexion();
   }, []);
 
   if (!fontsLoaded) {
-    return null; // O puedes mostrar un indicador de carga
+    return null;
   }
 
   return (
@@ -47,6 +62,8 @@ export default function App() {
         <Stack.Screen name="detalles" component={Detalles} />
         <Stack.Screen name="favoritos" component={Favoritos} />
       </Stack.Navigator>
+
     </NavigationContainer>
+    
   );
 }
